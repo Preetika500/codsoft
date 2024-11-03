@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-image: url('https://th.bing.com/th?id=OIP.3CkJ-U61NNwtZAvgpQ8nigHaEK&w=333&h=187&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2'); /* Replace with your image URL */
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the background image */
+            color: white; /* Change text color for better visibility */
+        }
+        #chat {
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-width: 400px;
+            margin: auto;
+            height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background for chat */
+        }
+        #userInput {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .user-message {
+            color: blue;
+            margin: 5px 0;
+        }
+        .bot-message {
+            color: green;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Chatbot</h1>
+<div id="chat"></div>
+<input type="text" id="userInput" placeholder="Type your message here..." />
+
+<script>
+    let userAnswers = {}; // Object to store user answers
+
+    function respondToUser(userInput) {
+        userInput = userInput.toLowerCase(); // Normalize input to lower case
+        let botResponse;
+
+        if (userInput.includes("hello") || userInput.includes("hi")) {
+            botResponse = "Hello! How can I assist you today?";
+        } else if (userInput.includes("how are you")) {
+            botResponse = "I'm just a bot, but I'm doing well! How about you?";
+        } else if (userInput.includes("your name")) {
+            botResponse = "I am a simple chatbot created to assist you!";
+        } else if (userInput.includes("time")) {
+            let currentTime = new Date().toLocaleTimeString();
+            botResponse = `The current time is ${currentTime}`;
+        } else if (userInput.includes("weather")) {
+            botResponse = "I can't fetch the weather right now, but you can check it online!";
+        } else if (userInput.includes("bye") || userInput.includes("goodbye")) {
+            botResponse = "Goodbye! Have a nice day!";
+        } else if (userInput.includes("what is your favorite color")) {
+            botResponse = "I don't have personal preferences, but I think blue is nice! What's your favorite color?";
+            userAnswers.favoriteColor = prompt("What's your favorite color?"); // Store user's favorite color
+        } else if (userInput.includes("what do you like to do")) {
+            botResponse = "I enjoy helping you find information! What hobbies do you have?";
+            userAnswers.hobbies = prompt("What hobbies do you have?"); // Store user's hobbies
+        } else if (userInput.includes("tell me something interesting")) {
+            botResponse = "Did you know honey never spoils? What about you, do you have any interesting facts?";
+            userAnswers.interestingFact = prompt("What interesting fact do you have?"); // Store user's interesting fact
+        } else if (userInput.includes("my name is")) {
+            const name = userInput.split("my name is ")[1];
+            userAnswers.name = name; // Store user's name
+            botResponse = `Nice to meet you, ${name}!`;
+        } else {
+            botResponse = "I'm sorry, I don't understand that. Can you please rephrase?";
+        }
+
+        return botResponse; // Return the bot's response
+    }
+
+    function displayMessage(message, isUser) {
+        const chat = document.getElementById("chat");
+        const messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        messageElement.className = isUser ? "user-message" : "bot-message";
+        chat.appendChild(messageElement);
+        chat.scrollTop = chat.scrollHeight; // Scroll to the bottom
+    }
+
+    document.getElementById("userInput").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            const userInput = this.value;
+            displayMessage(userInput, true); // Display user message
+            const botResponse = respondToUser(userInput); // Get bot response
+            displayMessage(botResponse, false); // Display bot message
+            this.value = ""; // Clear input field
+        }
+    });
+</script>
+
+</body>
+</html>
